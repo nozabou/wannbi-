@@ -8,22 +8,52 @@ Player::Player()
 
 Player::~Player()
 {
+	// 取得した絵を消す
 	DeleteGraph(GrHandle);
 }
 
 void Player::Init()
 {
+	// 絵の取得
 	GrHandle = LoadGraph("data/image/Player.png");
-	//assert(GrHandle == 0);
+	
+	
 }
 
 void Player::Update()
 {
+	// キャラクターの操作
+	JoyPad = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+	if ((JoyPad & PAD_INPUT_UP) != 0)
+	{
+		movepowerY = -3;
+	}
+	if ((JoyPad & PAD_INPUT_DOWN) != 0)
+	{
+		movepowerY = 3;
+	}
+	if((JoyPad & PAD_INPUT_UP) == 0 && (JoyPad &PAD_INPUT_DOWN) == 0)
+	{
+		movepowerY = 0;
+	}
+	if ((JoyPad & PAD_INPUT_RIGHT) != 0)
+	{
+		movepowerX = 3;
+	}
+	if ((JoyPad & PAD_INPUT_LEFT) != 0)
+	{
+		movepowerX = -3;
+	}
+	if ((JoyPad & PAD_INPUT_RIGHT) == 0 && (JoyPad & PAD_INPUT_LEFT) == 0)
+	{
+		movepowerX = 0;
+	}
+	playerY += movepowerY;
+	playerX += movepowerX;
 }
 
 void Player::Draw()
 {
-	DrawGraph(100,100,GrHandle,false);
-
-	//DrawExtendGraph(100, 100, 200, 200, GrHandle, true);
+	// Playerの表示位置
+	DrawGraph(playerX,playerY,GrHandle,true);
 }
