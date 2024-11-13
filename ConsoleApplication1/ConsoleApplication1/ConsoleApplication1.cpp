@@ -1,6 +1,8 @@
 ﻿#include "DxLib.h"
 #include "game.h"
 #include "Player.h"
+#include "Enemy.h"
+#include "Item.h"
 
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -26,8 +28,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetDrawScreen(DX_SCREEN_BACK);
 	// ここから下に変数を書く
 	Player p_player;
-
 	p_player.Init();
+	Enemy e_enemy;
+	e_enemy.Init();
+	Item i_item;
+	i_item.Init();
 	
 	//ゲームループ
 	while (ProcessMessage() == 0) // Windowsが行う処理を待つ
@@ -43,6 +48,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		//DrawCircle(100, 100, 10, 0xFFFF00, TRUE);
 		p_player.Update();
 		p_player.Draw();
+		e_enemy.Update();
+		e_enemy.Draw();
+		i_item.Update();
+		i_item.Draw();
 		
 
 		//画面の切り替わりを待つ必要がある
