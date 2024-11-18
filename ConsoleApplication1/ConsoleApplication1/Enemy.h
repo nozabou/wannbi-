@@ -10,8 +10,8 @@ public:
 	// Enemy‚Ì‰æ‘œ‚Ìæ“¾•Ï”
 	int GHandle = 0;
 	// Enemy‚Ì•\¦ˆÊ’u‚Ì•Ï”
-	int enemyX = 100;
-	int enemyY = 100;
+	int enemyPosX = 100;
+	int enemyPosY = 100;
 private:
 };
 

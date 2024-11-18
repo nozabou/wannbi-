@@ -7,9 +7,10 @@ public:
 	void Init();
 	void Update();
 	void Draw();
-	int shotX;
-	int shotY;
-	int shotFlag;
+	int shotPosX = 100;
+	int shotPosY = 300;
+	int GtHandle;
+	bool shotFlag = false;
 private:
 };
 
