@@ -1,4 +1,8 @@
 #pragma once
+#include "Shot.h"
+
+class Shot;
+
 class Player
 {
 public:
@@ -11,12 +15,13 @@ public:
 	// Player‚Ì‰æ‘œ‚Ìæ“¾•Ï”
 	int GrHandle = 0;
 	// Player‚Ì•\¦ˆÊ’u
-	int playerX = 320;
-	int playerY = 600;
+	int playerPosX = 320;
+	int playerPosY = 600;
 	// Player‚ÌˆÚ“®‚Ì—Í
 	int movepowerX = 0;
 	int movepowerY = 0;
 	int JoyPad;
 private:
+	Shot *PShot;
 };
 

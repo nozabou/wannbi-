@@ -3,7 +3,12 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Item.h"
+#include "Shot.h"
 
+class Player;
+class Enemy;
+class Item;
+class Shot;
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -27,12 +32,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//描画先を裏画面にする
 	SetDrawScreen(DX_SCREEN_BACK);
 	// ここから下に変数を書く
-	Player p_player;
-	p_player.Init();
-	Enemy e_enemy;
-	e_enemy.Init();
-	Item i_item;
-	i_item.Init();
+	Player* p_player = new Player();
+	p_player->Init();
+	Enemy* e_enemy = new Enemy();
+	e_enemy->Init();
+	Item* i_item = new Item();
+	i_item->Init();
+	Shot* s_shot = new Shot();
+	s_shot->Init();
 	
 	//ゲームループ
 	while (ProcessMessage() == 0) // Windowsが行う処理を待つ
@@ -45,13 +52,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ClearDrawScreen();
 
 		////ここにゲームの処理を書く
-		//DrawCircle(100, 100, 10, 0xFFFF00, TRUE);
-		p_player.Update();
-		p_player.Draw();
-		e_enemy.Update();
-		e_enemy.Draw();
-		i_item.Update();
-		i_item.Draw();
+		p_player->Update();
+		p_player->Draw();
+		e_enemy->Update();
+		e_enemy->Draw();
+		i_item->Update();
+		i_item->Draw();
+		s_shot->Update();
+		s_shot->Draw();
 		
 
 		//画面の切り替わりを待つ必要がある

@@ -14,7 +14,7 @@ Item::~Item()
 void Item::Init()
 {
 	// Item‚ÌŠG‚ÌŽæ“¾
-	GtHandle = LoadGraph("data/image/Bell.png");
+	/*GtHandle = LoadGraph("data/image/Bell.png");*/
 }
 
 void Item::Update()

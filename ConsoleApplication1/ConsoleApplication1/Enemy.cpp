@@ -24,5 +24,5 @@ void Enemy::Update()
 void Enemy::Draw()
 {
 	// Enemy‚Ì•\Ž¦ˆÊ’u
-	DrawGraph(enemyX,enemyY,GHandle,true);
+	DrawGraph(enemyPosX,enemyPosY,GHandle,true);
 }
