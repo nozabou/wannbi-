@@ -2,7 +2,7 @@
 #include "Shot.h"
 
 class Shot;
-
+class Enemy;
 class Player
 {
 public:
@@ -17,11 +17,13 @@ public:
 	// Player‚Ì•\Ž¦ˆÊ’u
 	int playerPosX = 320;
 	int playerPosY = 600;
+	int playerSize = 50;
 	// Player‚ÌˆÚ“®Žž‚Ì—Í
-	int movepowerX = 0;
-	int movepowerY = 0;
+	int movePowerX = 0;
+	int movePowerY = 0;
 	int JoyPad;
 private:
 	Shot *PShot;
+	Enemy* PEnemy;
 };
 

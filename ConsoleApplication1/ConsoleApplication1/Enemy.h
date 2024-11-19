@@ -12,6 +12,15 @@ public:
 	// Enemy‚Ì•\¦ˆÊ’u‚Ì•Ï”
 	int enemyPosX = 100;
 	int enemyPosY = 100;
+	const int enemySize = 50;
+	bool enemyRightMove;
+	// ‰¼•Ï”
+	int BulletX = enemyPosX;
+	int BulletY = enemyPosY;
+
+	const int BulletSpeed = 10;
+	const int BulletR = 5;
+	const int kScreenHeight = 720;
 private:
 };
 
