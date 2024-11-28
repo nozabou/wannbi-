@@ -1,32 +1,40 @@
 #include "Shot.h"
 #include "DxLib.h"
 
-Shot::Shot()
+namespace
+{
+	constexpr int kPlayerGraphW = 48;
+	constexpr int kPlayerGraphH = 48;
+}
+
+Shot::Shot():
+	m_graphicHandle(-1),
+	m_shotFlag(false)
 {
 }
 
 Shot::~Shot()
 {
 	// æ“¾‚µ‚½ŠG‚ğÁ‚·
-	DeleteGraph(GtHandle);
+	DeleteGraph(m_graphicHandle);
 }
 
 void Shot::Init()
 {
 	// ŠG‚Ìæ“¾
-	GtHandle = LoadGraph("data/image/Player.png");
+	m_graphicHandle = LoadGraph("data/image/Player.png");
 }
 
 void Shot::Update()
 {
-	if (shotFlag)
+	if (m_shotFlag)
 	{
 		// ’e‚ªã•ûŒü‚É16‚¸‚Âi‚Ş
-		shotPosY -= 16;
+		m_pos.Y -= 16;
 		// shotPosY‚ª-80‚æ‚è¬‚³‚­‚È‚Á‚½‚ç”­“®‚µ‚ÄshotFlag‚ğfalse‚ğ‘ã“ü‚·‚é
-		if (shotPosY < 80)
+		if (m_pos.Y< -10)
 		{
-			shotFlag = false;
+			m_shotFlag = false;
 		}
 
 	}
@@ -35,5 +43,5 @@ void Shot::Update()
 void Shot::Draw()
 {
 	// Shot‚Ì•\¦ˆÊ’u
-	DrawGraph(shotPosX,shotPosY,GtHandle, true);
+ 	DrawGraph(m_pos.X, m_pos.Y, m_graphicHandle, true);
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include "Vec2.h"
 class Shot
 {
 public:
@@ -7,10 +8,13 @@ public:
 	void Init();
 	void Update();
 	void Draw();
-	int shotPosX = 100;
-	int shotPosY = 300;
-	int GtHandle;
-	bool shotFlag = false;
+	bool GetShotFlag()const { return m_shotFlag; }
+	int m_graphicHandle;
+	bool m_shotFlag;
+	Vec2 m_pos;
 private:
+	
+	
+	
 };
 

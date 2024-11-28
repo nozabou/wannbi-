@@ -1,6 +1,8 @@
 #pragma once
 #include "Shot.h"
+#include "Vec2.h"
 
+class Vec2;
 class Shot;
 class Enemy;
 class Player
@@ -12,18 +14,16 @@ public:
 	void Init();
 	void Update();
 	void Draw();
-	// Player‚Ì‰æ‘œ‚Ìæ“¾•Ï”
-	int GrHandle = 0;
-	// Player‚Ì•\¦ˆÊ’u
-	int playerPosX = 320;
-	int playerPosY = 600;
-	int playerSize = 50;
-	// Player‚ÌˆÚ“®‚Ì—Í
-	int movePowerX = 0;
-	int movePowerY = 0;
-	int JoyPad;
+	
 private:
-	Shot *PShot;
-	Enemy* PEnemy;
+	// Player‚Ì‰æ‘œ‚Ìæ“¾•Ï”
+	int m_graficHandle;
+	int m_joyPad;
+	float m_moveX;
+	float m_moveY;
+	float m_length;
+	Shot* m_pShot;
+	Enemy* m_pEnemy;
+	Vec2 m_pos;
 };
 

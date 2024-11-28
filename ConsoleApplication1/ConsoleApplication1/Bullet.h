@@ -14,7 +14,7 @@ public:
 	void Draw();
 	
 private:
-	Enemy* PEnemy;
+	Enemy* m_pEnemy;
 	
 };
 

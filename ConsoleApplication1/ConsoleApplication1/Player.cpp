@@ -4,111 +4,141 @@
 #include "Shot.h"
 #include "Enemy.h"
 #include <cmath>
+#include "Vec2.h"
+#include "game.h"
+#include <math.h>
 
+namespace
+{
+	//グラフィックサイズ兼当たり判定
+	constexpr int kPlayerGraphW = 48;
+	constexpr int kPlayerGraphH = 48;
+	constexpr int kSpeed = 3;
+}
 
-
-Player::Player()
+Player::Player():
+	m_graficHandle(-1),
+	m_joyPad(1),
+	m_pos(Game::kScreenWidthCenter, Game::kScreenHeightCenter)
 {
 }
 
 Player::~Player()
 {
 	// 取得した絵を消す
-	DeleteGraph(GrHandle);
-	delete PEnemy;
-	delete PShot;
+	DeleteGraph(m_graficHandle);
+	delete m_pEnemy;
+	delete m_pShot;
 }
 
 void Player::Init()
 {
 	// 絵の取得
-	GrHandle = LoadGraph("data/image/Player.png");
-	PShot = new Shot();
-	PEnemy = new Enemy();
+	m_graficHandle = LoadGraph("data/image/Player.png");
+	m_pShot = new Shot();
+	m_pEnemy = new Enemy();
 }
 
 void Player::Update()
 {
 	// キャラクターの操作
-	JoyPad = GetJoypadInputState(DX_INPUT_KEY_PAD1);
-	if ((JoyPad & PAD_INPUT_UP) != 0)
+	m_joyPad = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+	if ((m_joyPad & PAD_INPUT_UP) != 0)
 	{
-		movePowerY = -3;
+		//m_pos.Y -= kSpeed;
+		m_moveY = -kSpeed;
 	}
-	if ((JoyPad & PAD_INPUT_DOWN) != 0)
+	if ((m_joyPad & PAD_INPUT_DOWN) != 0)
 	{
-		movePowerY = 3;
+		//m_pos.Y += kSpeed;
+		m_moveY = kSpeed;
 	}
-	if((JoyPad & PAD_INPUT_UP) == 0 && (JoyPad &PAD_INPUT_DOWN) == 0)
+	if((m_joyPad & PAD_INPUT_UP) == 0 && (m_joyPad &PAD_INPUT_DOWN) == 0)
 	{
-		movePowerY = 0;
+		//m_pos.Y += kSpeed;
+		m_moveY = 0;
 	}
-	if ((JoyPad & PAD_INPUT_RIGHT) != 0)
+	if ((m_joyPad & PAD_INPUT_RIGHT) != 0)
 	{
-		movePowerX = 3;
+		//m_pos.X += kSpeed;
+		m_moveX = kSpeed;
 	}
-	if ((JoyPad & PAD_INPUT_LEFT) != 0)
+	if ((m_joyPad & PAD_INPUT_LEFT) != 0)
 	{
-		movePowerX = -3;
+		//m_pos.X -= kSpeed;
+		m_moveX = -kSpeed;
 	}
-	if ((JoyPad & PAD_INPUT_RIGHT) == 0 && (JoyPad & PAD_INPUT_LEFT) == 0)
+	if ((m_joyPad & PAD_INPUT_RIGHT) == 0 && (m_joyPad & PAD_INPUT_LEFT) == 0)
 	{
-		movePowerX = 0;
+		//m_pos.X += kSpeed;
+		m_moveX = 0;
 	}
-	playerPosY += movePowerY;
-	playerPosX += movePowerX;
-	// スペースキーが押されたら弾を発射する
-	if (CheckHitKey(KEY_INPUT_SPACE))
-	{
-		/// shotFlagがfalseの場合発動する
-		if (PShot->shotFlag == false)
-		{ 
-			int PlayerW, PlayerH, ShotW, ShotH;
-			///  画像のサイズ
-   			GetGraphSize(GrHandle, &PlayerW, &PlayerH);
-			GetGraphSize(PShot->GtHandle, &ShotW, &ShotH);
-			/// 弾の出る場所のX座標を指定
-			PShot->shotPosX = (PlayerW - ShotW) / 2 + playerPosX;
-			/// 弾の出る場所のY座標を指定
-			PShot->shotPosY = (PlayerH - ShotH) / 2 + playerPosY;
-			/// shotFlagにtrueを代入する
-			PShot->shotFlag = true;
+	// m_pShotのUpdate		
+	m_pShot->Update();
+	// Aボタンを押したら弾を打つ
+		if (m_joyPad & PAD_INPUT_A)
+		{
+			// shotFlagがfalseの場合発動する
+			if (m_pShot->GetShotFlag() == false)
+			{
+				m_pShot->Init();
+				int PlayerW, PlayerH, ShotW, ShotH;
+				//  画像のサイズ
+				GetGraphSize(m_graficHandle, &PlayerW, &PlayerH);
+				GetGraphSize(m_pShot->m_graphicHandle, &ShotW, &ShotH);
+				// 弾の出る場所のX座標を指定
+				m_pShot->m_pos.X = (PlayerW - ShotW) / 2 + m_pos.X - ShotW / 2;
+				// 弾の出る場所のY座標を指定
+				m_pShot->m_pos.Y = (PlayerH - ShotH) / 2 + m_pos.Y;
+				// shotFlagにtrueを代入する
+				m_pShot->m_shotFlag = true;
+			}
 		}
-	}
-	/// プレイヤーが画面の左端を超えないようにする
-	if (playerPosX < 0)
+
+		m_length = sqrtf(m_moveX * m_moveX + m_moveY * m_moveY);
+
+		if (m_length > 0)
+		{
+			m_moveX /= m_length;
+			m_moveY /= m_length;
+		}
+		
+		m_pos.X += m_moveX * kSpeed;
+		m_pos.Y += m_moveY * kSpeed;
+	// プレイヤーが画面の左端を超えないようにする
+	if (m_pos.X < 0)
 	{
-		playerPosX = 0;
+		m_pos.X = 0;
 	}
-	/// 画面の右端を超えないようにする
-	if (playerPosX > 680)
+	// 画面の右端を超えないようにする
+	if (m_pos.X > Game::kScreenWidth - kPlayerGraphW)
 	{
-		playerPosX = 680;
+		m_pos.X = Game::kScreenWidth - kPlayerGraphW;
 	}
 	// 画面の上を超えないようにする
-	if (playerPosY < 0)
+	if (m_pos.Y < 0)
 	{
-		playerPosY = 0;
+		m_pos.Y = 0;
 	}
-	/// 画面の下を超えないようにする
-	if (playerPosY > 740 - 64)
+	// 画面の下を超えないようにする
+	if (m_pos.Y > Game::kScreenHeight - kPlayerGraphH)
 	{
-		playerPosY = 740 - 64;
+		m_pos.Y = Game::kScreenHeight - kPlayerGraphH;
 	}
 	// 当たり判定(仮)
-	int a = (playerPosX + (playerSize / 2)) - PEnemy->BulletX;
-	int b = (playerPosY + (playerSize / 2)) - PEnemy->BulletY;
-	int sum = sqrt(pow(a, 2) + pow(b, 2));
-	//当たっていたらbreakでゲームを終了
-	if (sum <= (playerSize / 2) + PEnemy->BulletR) 
-	{
-		DeleteGraph(GrHandle);
-	}
 	
+
+	printfDx("%f\n",m_pos.Y);
 }
 
 void Player::Draw()
 {
+	DrawBox(m_pos.X , m_pos.Y , m_pos.X + kPlayerGraphW, m_pos.Y + kPlayerGraphH, 0xffff00, false);
+
 	// Playerの表示位置
-	DrawGraph(playerPosX,playerPosY,GrHandle,true);
+	DrawGraph(m_pos.X, m_pos.Y, m_graficHandle, true);
+	if (m_pShot->GetShotFlag())
+	{
+		m_pShot->Draw();
+	}
 }

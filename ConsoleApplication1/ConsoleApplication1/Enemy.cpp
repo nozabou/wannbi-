@@ -27,17 +27,17 @@ void Enemy::Init()
 
 void Enemy::Update()
 {
-	//// エネミーが右に進む
-	//if (enemyRightMove == true)
-	//{
-	//	enemyPosX += 3;
-	//}
-	//// エネミーが左に進む
-	//else
-	//{
-	//	enemyPosX -=  3;
-	//}
-	// エネミーが画面買いに出ないようにする
+	// エネミーが右に進む
+	if (enemyRightMove == true)
+	{
+		enemyPosX += 3;
+	}
+	// エネミーが左に進む
+	else
+	{
+		enemyPosX -=  3;
+	}
+	// エネミーが画面外に出ないようにする
 	for (int i = 0; i < 3; i++)
 	{
 		if (enemyPosX > 680)
@@ -54,21 +54,15 @@ void Enemy::Update()
 	//敵の弾の座標更新処理
 	BulletY += BulletSpeed;
 
-	if (BulletY > kScreenHeight + BulletR * 2) {
-		BulletX = enemyPosX;
-		BulletY = enemyPosY;
-	}
 	// エネミーが弾を撃つ
-	BulletY += BulletSpeed;
 	if (BulletY > kScreenHeight + BulletR * 2)
 	{
 		BulletX = enemyPosX;
 		BulletY = enemyPosY;
 	}
 	//弾の描画
-	
-	
-	DrawCircle(BulletX + BulletR, BulletY + BulletR, BulletR, GetColor(255, 255, 255), true);
+	DrawBox(BulletX,BulletY, BulletX + BulletR, BulletY + BulletR, 0xffff00, false);
+	DrawCircle(BulletX , BulletY, BulletR, GetColor(255, 255, 255), true);
 }
 
 void Enemy::Draw()

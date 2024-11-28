@@ -8,7 +8,7 @@ Item::Item()
 Item::~Item()
 {
 	// •`‰æ‚µ‚½ŠG‚ğÁ‚·
-	DeleteGraph(GtHandle);
+	DeleteGraph(graphicHandle);
 }
 
 void Item::Init()
@@ -24,5 +24,5 @@ void Item::Update()
 void Item::Draw()
 {
 	// Item‚Ì•\¦ˆÊ’u
-	DrawGraph(itemX, itemY, GtHandle, true);
+	DrawGraph(itemX, itemY, graphicHandle, true);
 }
