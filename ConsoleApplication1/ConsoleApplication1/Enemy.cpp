@@ -67,6 +67,7 @@ void Enemy::Update()
 
 void Enemy::Draw()
 {
+	DrawBox(enemyPosX, enemyPosY, enemyPosX + enemySize, enemyPosY + enemySize, 0xffff00, false);
 	// Enemy‚Ì•\Ž¦ˆÊ’u
 	DrawGraph(enemyPosX,enemyPosY,GHandle,true);
 }

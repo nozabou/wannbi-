@@ -19,7 +19,8 @@ namespace
 Player::Player():
 	m_graficHandle(-1),
 	m_joyPad(1),
-	m_pos(Game::kScreenWidthCenter, Game::kScreenHeightCenter)
+	m_pos(Game::kScreenWidthCenter, Game::kScreenHeightCenter),
+	m_isShot(false)
 {
 }
 
@@ -28,14 +29,12 @@ Player::~Player()
 	// 取得した絵を消す
 	DeleteGraph(m_graficHandle);
 	delete m_pEnemy;
-	delete m_pShot;
 }
 
 void Player::Init()
 {
 	// 絵の取得
 	m_graficHandle = LoadGraph("data/image/Player.png");
-	m_pShot = new Shot();
 	m_pEnemy = new Enemy();
 }
 
@@ -73,35 +72,24 @@ void Player::Update()
 		//m_pos.X += kSpeed;
 		m_moveX = 0;
 	}
-	// m_pShotのUpdate		
-	m_pShot->Update();
 	// Aボタンを押したら弾を打つ
+	m_isShot = false;
+	m_tCount++;
+	if (m_tCount == 10)
+	{
 		if (m_joyPad & PAD_INPUT_A)
 		{
-			// shotFlagがfalseの場合発動する
-			if (m_pShot->GetShotFlag() == false)
-			{
-				m_pShot->Init();
-				int PlayerW, PlayerH, ShotW, ShotH;
-				//  画像のサイズ
-				GetGraphSize(m_graficHandle, &PlayerW, &PlayerH);
-				GetGraphSize(m_pShot->m_graphicHandle, &ShotW, &ShotH);
-				// 弾の出る場所のX座標を指定
-				m_pShot->m_pos.X = (PlayerW - ShotW) / 2 + m_pos.X - ShotW / 2;
-				// 弾の出る場所のY座標を指定
-				m_pShot->m_pos.Y = (PlayerH - ShotH) / 2 + m_pos.Y;
-				// shotFlagにtrueを代入する
-				m_pShot->m_shotFlag = true;
-			}
+			m_isShot = true;
 		}
+		m_tCount = 0;
+	}
+	m_length = sqrtf(m_moveX * m_moveX + m_moveY * m_moveY);
 
-		m_length = sqrtf(m_moveX * m_moveX + m_moveY * m_moveY);
-
-		if (m_length > 0)
-		{
-			m_moveX /= m_length;
-			m_moveY /= m_length;
-		}
+	if (m_length > 0)
+	{
+		m_moveX /= m_length;
+		m_moveY /= m_length;
+	}
 		
 		m_pos.X += m_moveX * kSpeed;
 		m_pos.Y += m_moveY * kSpeed;
@@ -137,8 +125,5 @@ void Player::Draw()
 
 	// Playerの表示位置
 	DrawGraph(m_pos.X, m_pos.Y, m_graficHandle, true);
-	if (m_pShot->GetShotFlag())
-	{
-		m_pShot->Draw();
-	}
+	
 }

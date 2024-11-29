@@ -5,6 +5,18 @@
 #include "Item.h"
 #include "Shot.h"
 
+
+// 四角形の判定チェック
+bool IsCheckHit(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4)
+{
+	if (x2 < x3) return false;
+	if (x1 > x4) return false;
+	if (y2 < y3) return false;
+	if (y1 > y4) return false;
+
+	return true;
+}
+
 class Player;
 class Enemy;
 class Item;
@@ -34,13 +46,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// ここから下に変数を書く
 	Player* p_player = new Player();
 	p_player->Init();
-	Enemy* e_enemy = new Enemy();
-	e_enemy->Init();
-	Item* i_item = new Item();
-	i_item->Init();
-	Shot* s_shot = new Shot();
-	s_shot->Init();
-	
+	Enemy* p_enemy = new Enemy();
+	p_enemy->Init();
+	Item* p_item = new Item();
+	p_item->Init();
+	Shot* p_shot[256];
+	for (int i = 0; i < 256; i++)
+	{
+		p_shot[i] = new Shot;
+	}
+	for (int i = 0; i < 256; i++)
+	{
+		p_shot[i]->Init();
+	}
+	int x[5] = {0,1,2,3,4};
+
+	bool isEnemyDead = false;
+
 	//ゲームループ
 	while (ProcessMessage() == 0) // Windowsが行う処理を待つ
 	{
@@ -51,15 +73,53 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		//画面全体をクリア
 		ClearDrawScreen();
 
-		////ここにゲームの処理を書く
+		//ここにゲームの処理を書く
 		p_player->Update();
 		p_player->Draw();
-		e_enemy->Update();
-		e_enemy->Draw();
-		i_item->Update();
-		i_item->Draw();
-		s_shot->Update();
-		s_shot->Draw();
+		p_enemy->Update();
+		if (!isEnemyDead)
+		{
+			p_enemy->Draw();
+		}
+		p_item->Update();
+		p_item->Draw();
+		for (int i = 0; i < 256; i++)
+		{
+			if (!p_shot[i]->GetShotFlag())
+			{
+				if (p_player->GetShootFlag())
+				{
+					p_shot[i]->SetShotFlag(true);
+					p_player->GetShootPos();
+					p_shot[i]->SetPos(p_player->GetShootPos());
+					break;
+				}
+			}
+		}
+		for (int i = 0; i < 256; i++)
+		{
+			p_shot[i]->Update();
+			bool isHit = IsCheckHit(
+				p_shot[i]->GetPos().X,
+				p_shot[i]->GetPos().Y,
+				p_shot[i]->GetPos().X + p_shot[i]->GetSize(),
+				p_shot[i]->GetPos().Y + p_shot[i]->GetSize(),
+				p_enemy->GetPosX(),
+				p_enemy->GetPosY(),
+				p_enemy->GetPosX() + p_enemy->GetSize(),
+				p_enemy->GetPosY() + p_enemy->GetSize());
+
+			if (isHit)
+			{
+				isEnemyDead = true;
+			}
+		}
+		for (int i = 0; i < 256; i++)
+		{
+			p_shot[i]->Draw();
+		}
+		
+		
 		
 
 		//画面の切り替わりを待つ必要がある
